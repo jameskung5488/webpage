@@ -1,28 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>ChatPDF</title>
+  <title>PDF 摘要</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <h1>ChatPDF</h1>
-  <input id="question" placeholder="請輸入您的問題">
-  <button id="submit">提交</button>
-  <div id="answer"></div>
+  <h1>PDF 摘要</h1>
+  <form action="/summary" method="post" enctype="multipart/form-data">
+    <input type="file" name="pdf">
+    <input type="submit" value="上傳">
+  </form>
+  <div id="summary"></div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/chatpdf/dist/chatpdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chatgpt/dist/chatgpt.min.js"></script>
 <script>
-  const chatpdf = new ChatPDF({
+  const chatgpt = new ChatGPT({
     token: process.env.OPENAI_TOKEN,
-    model: "pandagpt",
+    model: "chatgpt",
   });
 
   document.getElementById("submit").addEventListener("click", () => {
-    const question = document.getElementById("question").value;
-    chatpdf.ask(question, (answer) => {
-      document.getElementById("answer").innerHTML = answer;
-    });
+    event.preventDefault();
+
+    // 獲取 PDF 檔案
+    const pdf = event.target.querySelector("input[name='pdf']").files[0];
+
+    // 使用 ChatGPT 來生成摘要
+    const summary = await chatgpt.ask(pdf);
+
+    // 顯示摘要
+    document.querySelector("#summary").innerHTML = summary;
   });
 </script>
 </html>
