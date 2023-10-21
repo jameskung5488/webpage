@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>ChatPDF</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <h1>ChatPDF</h1>
+  <input id="question" placeholder="請輸入您的問題">
+  <button id="submit">提交</button>
+  <div id="answer"></div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chatpdf/dist/chatpdf.min.js"></script>
+<script>
+  const chatpdf = new ChatPDF({
+    token: process.env.OPENAI_TOKEN,
+    model: "pandagpt",
+  });
+
+  document.getElementById("submit").addEventListener("click", () => {
+    const question = document.getElementById("question").value;
+    chatpdf.ask(question, (answer) => {
+      document.getElementById("answer").innerHTML = answer;
+    });
+  });
+</script>
+</html>
